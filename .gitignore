@@ -1,0 +1,15 @@
+# Code only: no data, results or logs.
+log/
+tmp/
+output/
+*.gz
+*.pgen
+*.pvar
+*.psam
+*.bed
+*.bim
+*.fam
+*.feather
+*.parquet
+.Rhistory
+__pycache__/

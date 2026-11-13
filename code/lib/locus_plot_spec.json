@@ -1,0 +1,107 @@
+{
+  "_what": "Single source of truth for every locus-style figure in this project: the fine-mapping locus and credible-set plots (code/04_finemapping/plot_protein_loci_gwaslab.py, Python/matplotlib) and the coloc locus plots (code/07_colocalization/plot_coloc_loci.R, R/ggplot2+patchwork).",
+  "_why": "The two families are drawn in different languages, so they cannot share functions. They CAN share numbers, and they must: the LD palette was written out twice and had already drifted -- the 'no LD' grey was #c7cbd0 in Python and #bdbdbd in R. Anything a reader compares across the two figure families belongs here.",
+  "_not_here": "Layout mechanics. matplotlib wants add_axes([l,b,w,h]) fractions, patchwork wants plot_layout(heights=unit(...,'in')). Only the inch values are shared; each side converts.",
+
+  "ld": {
+    "_note": "Five bins plus NA, ordered low to high. Drawn in this order so strong LD lands on top. The NA grey is deliberately neutral, outside the blue-to-red scale: it means 'no LD information', not 'low LD'.",
+    "bins": ["< 0.2", "0.2-0.4", "0.4-0.6", "0.6-0.8", "≥ 0.8"],
+    "colours": ["#3b5b92", "#8fd0e8", "#2ca02c", "#ff9e4a", "#d62728"],
+    "na_colour": "#bdbdbd",
+    "na_label": "NA"
+  },
+
+  "marks": {
+    "_note": "Diameters in points, so both toolkits can convert (matplotlib s= is area in pt^2; ggplot size= is roughly diameter in mm).",
+    "top_variant_colour": "#7b3294",
+    "top_variant_shape": "diamond",
+    "top_variant_diameter_pt": 6.5,
+    "point_diameter_pt": 3.4,
+    "point_diameter_pt_sparse": 5.0,
+    "cs_ring_colour": "#2f3337",
+    "cs_ring_width_pt": 0.38,
+    "gene_line_colour": "#5a5d61",
+    "gene_line_width_pt": 1.4,
+    "sig_line": 5e-8,
+    "grid": false
+  },
+
+  "cognate": {
+    "_note": "The gene the figure is actually about, marked so the reader does not have to scan ~40 identical italic labels. A filled chip is the only filled element in the track, so it is found pre-attentively; red and purple already mean LD>=0.8 and top-PIP variant in the same figure. Matched by ENSG, never by symbol: 144 Olink assays carry a legacy symbol that no longer matches GENCODE.",
+    "chip_fill": "#ffe9a8",
+    "chip_edge": "#c9a227",
+    "chip_edge_width_pt": 0.5,
+    "chip_pad_em": 0.12,
+    "_coloc_note": "One chip style, not two. The protein's gene and the eQTL's gene are the SAME gene in 10,312 of 10,331 colocalizations (100% of GTEx and SingleBrain, 98.6% of MetaBrain). In the 19 exceptions they are neighbours -- IL5/RAD50 15 kb apart, CCL17/CCL22 46 kb, PDGFRB/CDX1 53 kb, FABP3/NKAIN1 186 kb -- so two chips in the same colour read correctly as 'this locus has two genes in play', and the panel title says which one the lower panel is. A second colour would make every reader learn a distinction that applies to 0.18% of figures."
+  },
+
+  "type": {
+    "_note": "Point sizes. The gene label is the smallest thing on the page and sets the floor.",
+    "axis_title_pt": 9.0,
+    "tick_pt": 8.0,
+    "legend_pt": 8.0,
+    "panel_title_pt": 9.0,
+    "gene_label_pt": 6.2,
+    "family": ["Arial", "Helvetica", "DejaVu Sans", "sans-serif"],
+    "gene_label_italic": true
+  },
+
+  "spacing_in": {
+    "_note": "Every gap is an absolute distance, never a fraction of figure height. Fractions were how the current plots ended up inconsistent: the same 0.08 fraction is 0.37 in on a 4.6 in locus figure and 0.63 in on a 2.5 in CS figure, which is the uneven legend gap visible today. Each script sums these to a total height, then divides to get whatever units its toolkit needs.",
+    "width": 10.2,
+    "margin_left": 0.82,
+    "margin_right": 0.82,
+    "pad_top": 0.12,
+    "title_row": 0.24,
+    "legend_row": 0.20,
+    "gap_legend_plot": 0.05,
+    "gap_panel_panel": 0.18,
+    "gap_plot_gene": 0.10,
+    "gap_plot_xlabel": 0.32,
+    "gene_row": 0.16,
+    "gene_min": 0.50,
+    "gene_label_pad_frac": 0.06,
+    "_gene_label_pad_note": "Horizontal room reserved for a gene's italic label when packing the track into rows, as a fraction of the window width. Bigger = fewer labels per row, so more rows and a taller figure, but less crowding. The fine-mapping plots used 0.06 and the coloc plots 0.10 while they were separate implementations; one shared function means one value.",
+    "pad_bottom": 0.08,
+    "plot_h_association": 1.90,
+    "plot_h_pip": 1.10,
+    "plot_h_coloc_panel": 1.60
+  },
+
+  "order": {
+    "_note": "One rule for every locus figure, so the eye learns it once: how to read the colours, the data, then the genomic context. The legend sits above the plot in all three families -- it used to be at the bottom, which put it below the gene track in one figure and below the x axis in another. There is no title row: the app already names the assay, the signal and the statistic above the image, and repeating that inside the PNG was the same fact twice. Only the coloc figure labels anything, and only per panel, because nothing outside the image can say which track is which.",
+    "locus": ["legend", "plot_h_association", "gene", "xlabel"],
+    "credible_set": ["legend", "plot_h_pip", "xlabel"],
+    "coloc": ["legend", "plot_h_coloc_panel", "plot_h_coloc_panel", "gene", "xlabel"]
+  },
+
+  "labels": {
+    "_note": "'to', not 'with': r2 is measured with respect to a reference variant, and 'to' is both the standard figure-note idiom and shorter. The coloc wording is deliberately explicit -- plot_coloc_loci.R computes LD ONCE, anchored on the exposure's top-PIP variant, and applies it to both panels. Saying 'each panel's top-PIP variant' would be wrong, and a shared reference is what makes the two panels comparable in the first place.",
+    "ld_lead": "LD (r²) to lead variant",
+    "ld_top_pip": "LD (r²) to top-PIP variant",
+    "ld_coloc": "LD (r²) to the pQTL top-PIP variant",
+    "ld_coloc_eqtl": "LD (r²) to the eQTL top-PIP variant",
+    "_ld_coloc_note": "Which one applies follows the EXPOSURE: plot_coloc_loci.R anchors LD on the exposure's top-PIP variant, and in mb_x_disease the exposure is a brain eQTL, not a pQTL.",
+    "top_variant_key": "◆ panel top-PIP variant",
+    "xlabel": "Chr {chr} position (Mb)",
+    "panel_pqtl": "Protein pQTL ({source})",
+    "panel_eqtl": "Gene eQTL ({source})",
+    "panel_finemap": "Fine-mapping",
+    "stat_pp4": "PP4 = {pp4}",
+    "_panel_note": "The entity is generic, the data source is not. Which protein or gene this is, the page says; which cohort, fluid, resource or tissue the track came from, only the image can carry once it is exported. So 'Protein pQTL (BioFINDER-2, Plasma)' and 'Gene eQTL (GTEx, artery aorta)', never 'GRN pQTL' or 'AAMDC eQTL'. A disease panel is labelled with the study's own trait name instead, which already reads as name-plus-source ('Lewy body dementia (Chia 2021)'). Every figure carries panel labels, including the single-panel fine-mapping ones, so the band between the legend and the data reads the same everywhere; the PIP panel is derived rather than a data source, so it is just 'Fine-mapping'."
+  },
+
+  "cohort_names": {
+    "_note": "Spelled out, because these figures are meant to be readable on their own once exported from the app.",
+    "bf1": "BioFINDER-1",
+    "bf2": "BioFINDER-2",
+    "BF1": "BioFINDER-1",
+    "BF2": "BioFINDER-2"
+  },
+
+  "render": {
+    "dpi": 220,
+    "bbox_inches": null,
+    "_bbox_note": "null, i.e. never 'tight'. Tight cropping trims to content, so a figure with a 3-digit y axis and one with a 0-1 axis get different left margins and stop lining up when the app stacks them."
+  }
+}
